@@ -1,0 +1,23 @@
+{
+  "name": "hubot-test-helper",
+  "version": "0.0.0",
+  "description": "Helper for testing hubot script",
+  "main": "./src/index",
+  "scripts": {
+    "test": "mocha --compilers coffee:coffee-script/register test"
+  },
+  "keywords": [
+    "hubot"
+  ],
+  "dependencies": {
+    "hubot": ">= 2.6.0 < 3.0.0"
+  },
+  "devDependencies": {
+    "coffee-script": "1.7.1",
+    "mocha": "*",
+    "chai": "*"
+  },
+
+  "author": "Fumiaki MATSUSHIMA",
+  "license": "MIT"
+}
