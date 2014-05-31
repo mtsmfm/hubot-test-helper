@@ -11,10 +11,13 @@ describe 'hello-world', ->
 
   context 'user says hi to hubot', ->
     beforeEach ->
-      room.user.say 'hubot: hi'
+      room.user.say 'alice', '@hubot hi'
+      room.user.say 'bob',   '@hubot hi'
 
     it 'should reply to user', ->
       expect(room.messages).to.eql [
-        {user:  'hubot: hi'}
-        {hubot: 'user: hi'}
+        ['alice', '@hubot hi']
+        ['hubot', '@alice hi']
+        ['bob',   '@hubot hi']
+        ['hubot', '@bob hi']
       ]

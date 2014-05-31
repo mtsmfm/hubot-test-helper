@@ -12,20 +12,20 @@ class Room extends Hubot.Adapter
     @messages = []
 
     @user =
-      say: (message) =>
-        @receive('user', message)
+      say: (userName, message) =>
+        @receive(userName, message)
 
   receive: (userName, message) ->
-    @messages.push {user: message}
+    @messages.push [userName, message]
 
     user = new Hubot.User(userName)
     super new Hubot.TextMessage(user, message)
 
   reply: (envelope, strings...) ->
-    @messages.push {hubot: "#{envelope.user.name}: #{str}"} for str in strings
+    @messages.push ['hubot', "@#{envelope.user.name} #{str}"] for str in strings
 
   send: (envelope, strings...) ->
-    @messages.push {hubot: str} for str in strings
+    @messages.push ['hubot', str] for str in strings
 
 class Helper
   constructor: (module) ->
