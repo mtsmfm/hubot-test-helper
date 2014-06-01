@@ -1,5 +1,5 @@
 Helper = require('../src/index')
-helper = new Helper(require './scripts/hello-world')
+helper = new Helper('./scripts')
 
 expect = require('chai').expect
 

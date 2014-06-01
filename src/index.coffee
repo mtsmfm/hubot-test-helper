@@ -1,3 +1,4 @@
+Path  = require('path')
 Hubot = require('hubot')
 
 class MockRobot extends Hubot.Robot
@@ -28,12 +29,13 @@ class Room extends Hubot.Adapter
     @messages.push ['hubot', str] for str in strings
 
 class Helper
-  constructor: (module) ->
-    @module = module
+  constructor: (scriptsPath) ->
+    @scriptsPath = Path.resolve(Path.dirname(module.parent.filename), scriptsPath)
 
   createRoom: ->
     robot = new MockRobot
-    @module robot
+    robot.load @scriptsPath
+
     robot.adapter
 
 module.exports = Helper
