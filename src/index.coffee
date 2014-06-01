@@ -1,3 +1,4 @@
+Fs    = require('fs')
 Path  = require('path')
 Hubot = require('hubot')
 
@@ -34,7 +35,9 @@ class Helper
 
   createRoom: ->
     robot = new MockRobot
-    robot.load @scriptsPath
+    # XXX robot.load load scripts async
+    for file in Fs.readdirSync(@scriptsPath).sort()
+      robot.loadFile @scriptsPath, file
 
     robot.adapter
 
