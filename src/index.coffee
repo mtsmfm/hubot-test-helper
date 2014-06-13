@@ -35,9 +35,12 @@ class Helper
 
   createRoom: ->
     robot = new MockRobot
-    # XXX robot.load load scripts async
-    for file in Fs.readdirSync(@scriptsPath).sort()
-      robot.loadFile @scriptsPath, file
+
+    if Fs.statSync(@scriptsPath).isDirectory()
+      for file in Fs.readdirSync(@scriptsPath).sort()
+        robot.loadFile @scriptsPath, file
+    else
+      robot.loadFile Path.dirname(@scriptsPath), Path.basename(@scriptsPath)
 
     robot.adapter
 
