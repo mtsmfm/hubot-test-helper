@@ -20,8 +20,11 @@ You can test it like:
 
 ```coffee
 Helper = require('hubot-test-helper')
-# helper loads all scripts under the directory
+# helper loads all scripts passed a directory
 helper = new Helper('./scripts')
+
+# helper loads a specific script if it's a file
+scriptHelper = new Helper('./scripts/specific-script.coffee')
 
 expect = require('chai').expect
 
