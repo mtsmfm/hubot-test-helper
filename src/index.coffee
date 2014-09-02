@@ -42,6 +42,8 @@ class Helper
     else
       robot.loadFile Path.dirname(@scriptsPath), Path.basename(@scriptsPath)
 
+    robot.brain.emit 'loaded'
+
     robot.adapter
 
 module.exports = Helper
