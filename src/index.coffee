@@ -3,8 +3,8 @@ Path  = require('path')
 Hubot = require('hubot')
 
 class MockRobot extends Hubot.Robot
-  constructor: ->
-    super null, null, false, 'hubot'
+  constructor: (httpd=false) ->
+    super null, null, httpd, 'hubot'
 
   loadAdapter: ->
     @adapter = new Room(@)
@@ -33,8 +33,8 @@ class Helper
   constructor: (scriptsPath) ->
     @scriptsPath = Path.resolve(Path.dirname(module.parent.filename), scriptsPath)
 
-  createRoom: ->
-    robot = new MockRobot
+  createRoom: (options={}) ->
+    robot = new MockRobot(options.httpd)
 
     if Fs.statSync(@scriptsPath).isDirectory()
       for file in Fs.readdirSync(@scriptsPath).sort()
