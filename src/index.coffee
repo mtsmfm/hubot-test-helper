@@ -23,6 +23,9 @@ class Room extends Hubot.Adapter
     user = new Hubot.User(userName)
     super new Hubot.TextMessage(user, message)
 
+  destroy: ->
+    @robot.server.close()
+
   reply: (envelope, strings...) ->
     @messages.push ['hubot', "@#{envelope.user.name} #{str}"] for str in strings
 

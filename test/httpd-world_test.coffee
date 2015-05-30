@@ -1,5 +1,5 @@
 Helper = require('../src/index')
-helper = new Helper('./scripts/httpd-world.coffee')
+helper = new Helper('./scripts')
 http = require('http')
 
 expect = require('chai').expect
@@ -9,6 +9,9 @@ process.env.EXPRESS_PORT = 8080
 describe 'hello-world', ->
   beforeEach ->
     @room = helper.createRoom()
+
+  afterEach ->
+    @room.destroy()
 
   context 'GET /hello/world', ->
     beforeEach (done) ->
