@@ -33,6 +33,9 @@ describe 'hello-world', ->
   beforeEach ->
     @room = helper.createRoom()
 
+  afterEach ->
+    @room.destroy()
+
   context 'user says hi to hubot', ->
     beforeEach ->
       @room.user.say 'alice', '@hubot hi'
