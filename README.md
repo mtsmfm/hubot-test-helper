@@ -49,3 +49,14 @@ describe 'hello-world', ->
         ['hubot', '@bob hi']
       ]
 ```
+
+#### HTTPD
+
+By default Hubot enables a built in HTTP server. The server continues between
+tests and so requires it to be shutdown during teardown using `room.destroy()`.
+
+This feature can be turned off in tests that don't need it by passing using
+`helper.createRoom(http: false)`.
+
+See [the tests](test/httpd-world_test.coffee) for an example of testing the
+HTTP server.
