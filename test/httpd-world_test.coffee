@@ -8,7 +8,7 @@ process.env.EXPRESS_PORT = 8080
 
 describe 'hello-world', ->
   beforeEach ->
-    @room = helper.createRoom(httpd: true)
+    @room = helper.createRoom()
 
   context 'GET /hello/world', ->
     beforeEach (done) ->

@@ -3,7 +3,7 @@ Path  = require('path')
 Hubot = require('hubot')
 
 class MockRobot extends Hubot.Robot
-  constructor: (httpd=false) ->
+  constructor: (httpd=true) ->
     super null, null, httpd, 'hubot'
 
   loadAdapter: ->

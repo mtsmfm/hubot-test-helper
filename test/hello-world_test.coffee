@@ -6,7 +6,7 @@ expect = require('chai').expect
 describe 'hello-world', ->
 
   beforeEach ->
-    @room = helper.createRoom()
+    @room = helper.createRoom(httpd: false)
 
   context 'user says hi to hubot', ->
     beforeEach ->
