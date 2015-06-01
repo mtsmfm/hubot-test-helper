@@ -3,8 +3,8 @@ Path  = require('path')
 Hubot = require('hubot')
 
 class MockRobot extends Hubot.Robot
-  constructor: ->
-    super null, null, false, 'hubot'
+  constructor: (httpd=true) ->
+    super null, null, httpd, 'hubot'
 
   loadAdapter: ->
     @adapter = new Room(@)
@@ -23,6 +23,9 @@ class Room extends Hubot.Adapter
     user = new Hubot.User(userName)
     super new Hubot.TextMessage(user, message)
 
+  destroy: ->
+    @robot.server.close()
+
   reply: (envelope, strings...) ->
     @messages.push ['hubot', "@#{envelope.user.name} #{str}"] for str in strings
 
@@ -33,8 +36,8 @@ class Helper
   constructor: (scriptsPath) ->
     @scriptsPath = Path.resolve(Path.dirname(module.parent.filename), scriptsPath)
 
-  createRoom: ->
-    robot = new MockRobot
+  createRoom: (options={}) ->
+    robot = new MockRobot(options.httpd)
 
     if Fs.statSync(@scriptsPath).isDirectory()
       for file in Fs.readdirSync(@scriptsPath).sort()

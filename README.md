@@ -29,21 +29,34 @@ scriptHelper = new Helper('./scripts/specific-script.coffee')
 expect = require('chai').expect
 
 describe 'hello-world', ->
-  room = null
 
   beforeEach ->
-    room = helper.createRoom()
+    @room = helper.createRoom()
+
+  afterEach ->
+    @room.destroy()
 
   context 'user says hi to hubot', ->
     beforeEach ->
-      room.user.say 'alice', '@hubot hi'
-      room.user.say 'bob',   '@hubot hi'
+      @room.user.say 'alice', '@hubot hi'
+      @room.user.say 'bob',   '@hubot hi'
 
     it 'should reply to user', ->
-      expect(room.messages).to.eql [
+      expect(@room.messages).to.eql [
         ['alice', '@hubot hi']
         ['hubot', '@alice hi']
         ['bob',   '@hubot hi']
         ['hubot', '@bob hi']
       ]
 ```
+
+#### HTTPD
+
+By default Hubot enables a built in HTTP server. The server continues between
+tests and so requires it to be shutdown during teardown using `room.destroy()`.
+
+This feature can be turned off in tests that don't need it by passing using
+`helper.createRoom(http: false)`.
+
+See [the tests](test/httpd-world_test.coffee) for an example of testing the
+HTTP server.
