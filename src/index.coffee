@@ -2,6 +2,8 @@ Fs    = require('fs')
 Path  = require('path')
 Hubot = require('hubot')
 
+process.setMaxListeners(0)
+
 class MockResponse extends Hubot.Response
   sendPrivate: (strings...) ->
     @robot.adapter.sendPrivate @envelope, strings...
