@@ -1,7 +1,6 @@
 language: node_js
 node_js:
-- 0.11
-- 0.1
+- 0.12
 notifications:
   webhooks:
     secure: MKswwGkJtSSlQ8x86+Tuhx9DljJ3uxevZMXCkcPJd5v7kOuATKnxvej+rthUra/g/VdY8D6+wqLlRUIGH6tg+wsFSHlWPnOtngfQV8L48jVOlYlYBnoztkIrp0u5vR+xg5Nq6tAVSpAvp7umf7QJvjjcAaT0zIOmiz6YJzy1+g0=
