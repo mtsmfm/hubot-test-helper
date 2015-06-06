@@ -6,7 +6,7 @@ expect = require('chai').expect
 
 process.env.EXPRESS_PORT = 8080
 
-describe 'hello-world', ->
+describe 'httpd-world', ->
   beforeEach ->
     @room = helper.createRoom()
 

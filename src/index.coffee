@@ -2,9 +2,15 @@ Fs    = require('fs')
 Path  = require('path')
 Hubot = require('hubot')
 
+class MockResponse extends Hubot.Response
+  sendPrivate: (strings...) ->
+    @robot.adapter.sendPrivate @envelope, strings...
+
 class MockRobot extends Hubot.Robot
   constructor: (httpd=true) ->
     super null, null, httpd, 'hubot'
+
+    @Response = MockResponse
 
   loadAdapter: ->
     @adapter = new Room(@)
@@ -12,6 +18,8 @@ class MockRobot extends Hubot.Robot
 class Room extends Hubot.Adapter
   constructor: (@robot) ->
     @messages = []
+
+    @privateMessages = {}
 
     @user =
       say: (userName, message) =>
@@ -31,6 +39,11 @@ class Room extends Hubot.Adapter
 
   send: (envelope, strings...) ->
     @messages.push ['hubot', str] for str in strings
+
+  sendPrivate: (envelope, strings...) ->
+    if envelope.user.name not of @privateMessages
+      @privateMessages[envelope.user.name] = []
+    @privateMessages[envelope.user.name].push ['hubot', str] for str in strings
 
 class Helper
   constructor: (scriptsPath) ->
