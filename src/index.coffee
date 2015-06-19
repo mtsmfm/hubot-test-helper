@@ -48,11 +48,16 @@ class Room extends Hubot.Adapter
     @privateMessages[envelope.user.name].push ['hubot', str] for str in strings
 
 class Helper
+  @Response = MockResponse
+
   constructor: (scriptsPath) ->
     @scriptsPath = Path.resolve(Path.dirname(module.parent.filename), scriptsPath)
 
   createRoom: (options={}) ->
     robot = new MockRobot(options.httpd)
+
+    if 'response' of options
+      robot.Response = options.response
 
     if Fs.statSync(@scriptsPath).isDirectory()
       for file in Fs.readdirSync(@scriptsPath).sort()
