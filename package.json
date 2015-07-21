@@ -1,6 +1,6 @@
 {
   "name": "hubot-test-helper",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Helper for testing hubot script",
   "main": "./src/index",
   "scripts": {
