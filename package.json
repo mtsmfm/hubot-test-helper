@@ -18,5 +18,9 @@
     "mocha": "latest"
   },
   "author": "Fumiaki MATSUSHIMA",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:mtsmfm/hubot-test-helper.git"
+  }
 }
