@@ -1,6 +1,7 @@
 Helper = require('../src/index')
 helper = new Helper('./scripts/private-message.coffee')
 
+co     = require('co')
 expect = require('chai').expect
 
 describe 'private-message', ->
@@ -10,7 +11,8 @@ describe 'private-message', ->
 
   context 'user asks hubot for a secret', ->
     beforeEach ->
-      @room.user.say 'alice', '@hubot tell me a secret'
+      co =>
+        yield @room.user.say 'alice', '@hubot tell me a secret'
 
     it 'should not post to the public channel', ->
       expect(@room.messages).to.eql [

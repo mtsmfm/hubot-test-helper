@@ -26,6 +26,7 @@ helper = new Helper('./scripts')
 # helper loads a specific script if it's a file
 scriptHelper = new Helper('./scripts/specific-script.coffee')
 
+co     = require('co')
 expect = require('chai').expect
 
 describe 'hello-world', ->
@@ -38,8 +39,9 @@ describe 'hello-world', ->
 
   context 'user says hi to hubot', ->
     beforeEach ->
-      @room.user.say 'alice', '@hubot hi'
-      @room.user.say 'bob',   '@hubot hi'
+      co =>
+        yield @room.user.say 'alice', '@hubot hi'
+        yield @room.user.say 'bob',   '@hubot hi'
 
     it 'should reply to user', ->
       expect(@room.messages).to.eql [
