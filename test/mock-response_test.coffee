@@ -1,6 +1,7 @@
 Helper = require('../src/index')
 helper = new Helper('./scripts/mock-response.coffee')
 
+co     = require('co')
 expect = require('chai').expect
 
 class NewMockResponse extends Helper.Response
@@ -14,8 +15,9 @@ describe 'mock-response', ->
 
   context 'user says "give me a random" number to hubot', ->
     beforeEach ->
-      @room.user.say 'alice', '@hubot give me a random number'
-      @room.user.say 'bob',   '@hubot give me a random number'
+      co =>
+        yield @room.user.say 'alice', '@hubot give me a random number'
+        yield @room.user.say 'bob',   '@hubot give me a random number'
 
     it 'should reply to user with a random number', ->
       expect(@room.messages).to.eql [

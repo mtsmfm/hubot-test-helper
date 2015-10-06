@@ -4,16 +4,17 @@
   "description": "Helper for testing hubot script",
   "main": "./src/index",
   "scripts": {
-    "test": "mocha --compilers coffee:coffee-script/register test"
+    "test": "mocha --compilers coffee:coffee-script/register --harmony-generators test"
   },
   "keywords": [
     "hubot"
   ],
   "dependencies": {
-    "hubot": ">= 2.6.0 < 2.14.0"
+    "hubot": ">= 2.6.0 < 3"
   },
   "devDependencies": {
     "chai": "latest",
+    "co": "latest",
     "coffee-script": "latest",
     "mocha": "latest"
   },
