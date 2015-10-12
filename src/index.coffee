@@ -30,7 +30,7 @@ class Room extends Hubot.Adapter
   receive: (userName, message) ->
     new Promise (resolve) =>
       @messages.push [userName, message]
-      user = new Hubot.User(userName)
+      user = new Hubot.User(userName, { room: @name })
       @robot.receive(new Hubot.TextMessage(user, message), resolve)
 
   destroy: ->
@@ -67,6 +67,7 @@ class Helper
 
     robot.brain.emit 'loaded'
 
+    robot.adapter.name = options.name or 'room1'
     robot.adapter
 
 module.exports = Helper
