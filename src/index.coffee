@@ -47,6 +47,10 @@ class Room extends Hubot.Adapter
       @privateMessages[envelope.user.name] = []
     @privateMessages[envelope.user.name].push ['hubot', str] for str in strings
 
+  robotEvent: () ->
+    @robot.emit.apply(@robot, arguments)
+
+
 class Helper
   @Response = MockResponse
 
