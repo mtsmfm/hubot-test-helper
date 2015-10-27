@@ -50,7 +50,6 @@ class Room extends Hubot.Adapter
   robotEvent: () ->
     @robot.emit.apply(@robot, arguments)
 
-
 class Helper
   @Response = MockResponse
 

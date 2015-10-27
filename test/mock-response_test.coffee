@@ -9,7 +9,6 @@ class NewMockResponse extends Helper.Response
     3
 
 describe 'mock-response', ->
-
   beforeEach ->
     @room = helper.createRoom(response: NewMockResponse)
 

@@ -5,7 +5,6 @@ co     = require('co')
 expect = require('chai').expect
 
 describe 'private-message', ->
-
   beforeEach ->
     @room = helper.createRoom(httpd: false)
 

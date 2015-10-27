@@ -5,7 +5,6 @@ co     = require('co')
 expect = require('chai').expect
 
 describe 'hello-world', ->
-
   beforeEach ->
     @room = helper.createRoom(httpd: false)
 

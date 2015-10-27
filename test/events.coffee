@@ -5,7 +5,6 @@ co     = require('co')
 expect = require('chai').expect
 
 describe 'events', ->
-
   beforeEach ->
     @room = helper.createRoom(httpd: false)
 
