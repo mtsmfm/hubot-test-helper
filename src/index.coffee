@@ -27,6 +27,12 @@ class Room extends Hubot.Adapter
       say: (userName, message) =>
         @receive(userName, message)
 
+      enter: (userName) =>
+        @enter(userName)
+
+      leave: (userName) =>
+        @leave(userName)
+
   receive: (userName, message) ->
     new Promise (resolve) =>
       @messages.push [userName, message]
@@ -49,6 +55,16 @@ class Room extends Hubot.Adapter
 
   robotEvent: () ->
     @robot.emit.apply(@robot, arguments)
+
+  enter: (userName) ->
+    new Promise (resolve) =>
+      user = new Hubot.User(userName, { room: @name })
+      @robot.receive(new Hubot.EnterMessage(user), resolve)
+
+  leave: (userName) ->
+    new Promise (resolve) =>
+      user = new Hubot.User(userName, { room: @name })
+      @robot.receive(new Hubot.LeaveMessage(user), resolve)
 
 class Helper
   @Response = MockResponse
