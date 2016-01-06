@@ -1,10 +1,11 @@
 {
   "name": "hubot-test-helper",
   "description": "Helper for testing hubot script",
-  "main": "./src/index",
+  "main": "./lib/index.js",
   "scripts": {
     "test": "mocha --compilers coffee:coffee-script/register test",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "prepublish": "coffee --compile --output lib/ src/"
   },
   "keywords": [
     "hubot"
@@ -16,6 +17,7 @@
     "chai": "latest",
     "co": "latest",
     "coffee-script": "latest",
+    "lodash": "^3.10.1",
     "mocha": "latest",
     "semantic-release": "^4.3.5"
   },
