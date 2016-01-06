@@ -17,7 +17,6 @@
     "chai": "latest",
     "co": "latest",
     "coffee-script": "latest",
-    "lodash": "^3.10.1",
     "mocha": "latest",
     "semantic-release": "^4.3.5"
   },
