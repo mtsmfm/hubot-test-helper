@@ -4,7 +4,7 @@
   "main": "./lib/index.js",
   "scripts": {
     "test": "mocha --compilers coffee:coffee-script/register test",
-    "semantic-release": "semantic-release pre && npm run prepublish && npm publish && semantic-release post",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "prepublish": "coffee --compile --output lib/ src/"
   },
   "keywords": [
