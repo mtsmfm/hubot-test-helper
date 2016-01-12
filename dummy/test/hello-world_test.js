@@ -2,9 +2,9 @@
 (function() {
   var Helper, co, expect, helper;
 
-  Helper = require('../src/index');
+  Helper = require('hubot-test-helper');
 
-  helper = new Helper('./scripts/hello-world.coffee');
+  helper = new Helper('../scripts/hello-world.js');
 
   co = require('co');
 
