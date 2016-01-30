@@ -1,0 +1,18 @@
+{
+  "name": "hubot",
+  "version": "0.0.0",
+  "private": true,
+  "author": "Fumiaki MATSUSHIMA",
+  "scripts": {
+    "test": "mocha --compilers coffee:coffee-script/register test"
+  },
+  "dependencies": {
+    "hubot": "latest"
+  },
+  "devDependencies": {
+    "hubot-test-helper": "latest",
+    "chai": "latest",
+    "co": "latest",
+    "mocha": "latest"
+  }
+}

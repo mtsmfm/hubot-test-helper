@@ -3,8 +3,10 @@
   "description": "Helper for testing hubot script",
   "main": "./lib/index.js",
   "scripts": {
-    "test": "mocha --compilers coffee:coffee-script/register test",
-    "semantic-release": "semantic-release pre && npm run prepublish && npm publish && semantic-release post",
+    "test": "npm run test-unit && npm run test-integration",
+    "test-unit": "mocha --compilers coffee:coffee-script/register test",
+    "test-integration": "cd dummy && npm i && npm run test",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "prepublish": "coffee --compile --output lib/ src/"
   },
   "keywords": [
