@@ -62,3 +62,53 @@ This feature can be turned off in tests that don't need it by passing using
 
 See [the tests](test/httpd-world_test.coffee) for an example of testing the
 HTTP server.
+
+
+#### Manual delay
+
+Sometimes we can't access callback actions from a script. Just like in real use-case we may have to wait for a bot to finish processing before replying, in testing we may anticipate the delayed reply with a manual time delay. For example we have the following script:
+
+```coffee
+module.exports = (robot) ->
+  robot.hear /(http(?:s?):\/\/(\S*))/i, (res) ->
+    url = res.match[1]
+    res.send "ok1: #{url}"
+    robot.http(url).get() (err, response, body) ->
+      res.send "ok2: #{url}"
+```
+
+To test the second callback response "ok2: ..." we use the following script:
+
+```coffee
+Helper = require('hubot-test-helper')
+helper = new Helper('../scripts/http.coffee')
+
+Promise= require('bluebird')
+co     = require('co')
+expect = require('chai').expect
+
+# test ping
+describe 'http', ->
+  beforeEach ->
+    @room = helper.createRoom(httpd: false)
+
+  # Test case
+  context 'user posts link', ->
+    beforeEach ->
+      co =>
+        yield @room.user.say 'user1', 'http://google.com'
+        # delay one second for the second 
+        # callback message to be posted to @room
+        yield new Promise.delay(1000)
+
+    # response
+    it 'expects deplayed callback from ok2', ->
+      console.log @room.messages
+      expect(@room.messages).to.eql [
+        ['user1', 'http://google.com']
+        ['hubot', 'ok1: http://google.com']
+        ['hubot', 'ok2: http://google.com']
+      ]
+```
+
+Note that `yield` and *generators* are part of [**ECMA6**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*), so it may not work on older node.js versions. It will wait for the delay to complete the `beforeEach` before proceeding to the test `it`.
