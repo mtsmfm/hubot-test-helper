@@ -66,7 +66,11 @@ HTTP server.
 
 #### Manual delay
 
-Sometimes we can't access callback actions from a script. Just like in real use-case we may have to wait for a bot to finish processing before replying, in testing we may anticipate the delayed reply with a manual time delay. For example we have the following script:
+Sometimes we can't access callback actions from a script.
+Just like in real use-case we may have to wait for a bot to finish processing before replying,
+in testing we may anticipate the delayed reply with a manual time delay.
+
+For example we have the following script:
 
 ```coffee
 module.exports = (robot) ->
@@ -97,7 +101,7 @@ describe 'http', ->
     beforeEach ->
       co =>
         yield @room.user.say 'user1', 'http://google.com'
-        # delay one second for the second 
+        # delay one second for the second
         # callback message to be posted to @room
         yield new Promise.delay(1000)
 
