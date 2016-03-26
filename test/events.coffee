@@ -17,3 +17,13 @@ describe 'events', ->
         ['hubot', 'got event with event data']
       ]
 
+  context 'should hear events emitted by responses', ->
+
+
+    it 'should trigger an event', ->
+      response = null
+      @room.robot.on 'response-event', (event) ->
+        response = event.content
+
+      @room.user.say('bob', '@hubot send event').then =>
+        expect(response).to.eql('hello')
