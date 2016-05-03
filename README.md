@@ -116,3 +116,45 @@ describe 'http', ->
 ```
 
 Note that `yield` and *generators* are part of [**ECMA6**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*), so it may not work on older node.js versions. It will wait for the delay to complete the `beforeEach` before proceeding to the test `it`.
+
+
+#### Testing events
+
+You can also test events emitted by your script.  For example, Slack users
+may want to test the creation of a
+[message attachment](https://api.slack.com/docs/attachments).
+
+Given the following script:
+
+```coffee
+module.exports = (robot) ->
+
+  robot.respond /check status$/i, (msg) ->
+    robot.emit 'slack.attachment',
+      message: msg.message,
+      content: {
+        color: "good"
+        text: "It's all good!"
+      }
+```
+
+you could test the emitted event like this:
+
+```coffee
+Helper = require 'hubot-test-helper'
+helper = new Helper('../scripts/status_check.coffee')
+
+expect = require('chai').expect
+
+describe 'status check', ->
+  beforeEach ->
+    @room = helper.createRoom(httpd: false)
+
+  it 'should send a slack event', ->
+    response = null
+    @room.robot.on 'slack.attachment', (event) ->
+      response = event.content
+
+    @room.user.say('bob', '@hubot check status').then =>
+      expect(response.text).to.eql("It's all good!")
+```
