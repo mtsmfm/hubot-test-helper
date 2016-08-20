@@ -69,10 +69,10 @@ class Room extends Hubot.Adapter
 class Helper
   @Response = MockResponse
 
-  constructor: (scriptsPath) ->
-    if not Array.isArray(scriptsPath)
-      scriptsPath = [scriptsPath]
-    @scriptsPath = scriptsPath
+  constructor: (scriptsPaths) ->
+    if not Array.isArray(scriptsPaths)
+      scriptsPaths = [scriptsPaths]
+    @scriptsPaths = scriptsPaths
 
   createRoom: (options={}) ->
     robot = new MockRobot(options.httpd)
@@ -80,7 +80,7 @@ class Helper
     if 'response' of options
       robot.Response = options.response
 
-    for script in @scriptsPath
+    for script in @scriptsPaths
       script = Path.resolve(Path.dirname(module.parent.filename), script)
       if Fs.statSync(script).isDirectory()
         for file in Fs.readdirSync(script).sort()
