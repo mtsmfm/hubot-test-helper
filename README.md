@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/mtsmfm/hubot-test-helper.svg?branch=master)](https://travis-ci.org/mtsmfm/hubot-test-helper)
 
+Helper for testing Hubot script.
+
 ## Install
 
 `npm install hubot-test-helper --save-dev`
