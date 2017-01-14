@@ -9,16 +9,16 @@ class MockResponse extends Hubot.Response
     @robot.adapter.sendPrivate @envelope, strings...
 
 class MockRobot extends Hubot.Robot
-  constructor: (httpd=true) ->
-    super null, null, httpd, 'hubot'
+  constructor: (@httpd=true) ->
+    super null, null, @httpd, 'hubot'
 
     @Response = MockResponse
 
   loadAdapter: ->
-    @adapter = new Room(@)
+    @adapter = new Room(@, @httpd)
 
 class Room extends Hubot.Adapter
-  constructor: (@robot) ->
+  constructor: (@robot, @httpd) ->
     @messages = []
 
     @privateMessages = {}
@@ -40,7 +40,7 @@ class Room extends Hubot.Adapter
       @robot.receive(new Hubot.TextMessage(user, message), resolve)
 
   destroy: ->
-    @robot.server.close()
+    @robot.server.close() if @httpd
 
   reply: (envelope, strings...) ->
     @messages.push ['hubot', "@#{envelope.user.name} #{str}"] for str in strings
