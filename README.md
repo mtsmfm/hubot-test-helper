@@ -160,3 +160,45 @@ describe 'status check', ->
     @room.user.say('bob', '@hubot check status').then =>
       expect(response.text).to.eql("It's all good!")
 ```
+
+## Development
+
+### Requirements
+
+- docker
+- docker-compose
+
+### Setup
+
+```
+git clone https://github.com/mtsmfm/hubot-test-helper
+cd hubot-test-helper
+docker-compose up -d
+docker-compose exec app bash
+yarn install
+```
+
+### Run test
+
+```
+yarn run test
+```
+
+#### Debug
+
+```
+yarn run test-unit-debug
+```
+
+Above command will output:
+
+```
+yarn run v0.18.1
+$ mocha --inspect --debug-brk --compilers coffee:coffee-script/register test
+Debugger listening on port 9229.
+Warning: This is an experimental feature and could change at any time.
+To start debugging, open the following URL in Chrome:
+    chrome-devtools://devtools/bundled/inspector.html?experiments=true&v8only=true&ws=127.0.0.1:9229/59631086-0a0c-424b-8f5b-8828be123894
+```
+
+Then open `chrome-devtools://devtools/bundled/inspector.html?experiments=true&v8only=true&ws=127.0.0.1:9229/59631086-0a0c-424b-8f5b-8828be123894` in Chrome.
