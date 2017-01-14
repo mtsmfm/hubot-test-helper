@@ -21,7 +21,7 @@
     "co": "latest",
     "coffee-script": "latest",
     "mocha": "latest",
-    "semantic-release": "^4.3.5"
+    "semantic-release": "latest"
   },
   "author": "Fumiaki MATSUSHIMA",
   "license": "MIT",
