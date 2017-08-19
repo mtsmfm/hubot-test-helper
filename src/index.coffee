@@ -24,19 +24,20 @@ class Room extends Hubot.Adapter
     @privateMessages = {}
 
     @user =
-      say: (userName, message) =>
-        @receive(userName, message)
+      say: (userName, message, userParams) =>
+        @receive(userName, message, userParams)
 
-      enter: (userName) =>
-        @enter(userName)
+      enter: (userName, userParams) =>
+        @enter(userName, userParams)
 
-      leave: (userName) =>
-        @leave(userName)
+      leave: (userName, userParams) =>
+        @leave(userName, userParams)
 
-  receive: (userName, message) ->
+  receive: (userName, message, userParams = {}) ->
     new Promise (resolve) =>
       @messages.push [userName, message]
-      user = new Hubot.User(userName, { room: @name })
+      userParams.room = @name
+      user = new Hubot.User(userName, userParams)
       @robot.receive(new Hubot.TextMessage(user, message), resolve)
 
   destroy: ->
@@ -56,14 +57,16 @@ class Room extends Hubot.Adapter
   robotEvent: () ->
     @robot.emit.apply(@robot, arguments)
 
-  enter: (userName) ->
+  enter: (userName, userParams = {}) ->
     new Promise (resolve) =>
-      user = new Hubot.User(userName, { room: @name })
+      userParams.room = @name
+      user = new Hubot.User(userName, userParams)
       @robot.receive(new Hubot.EnterMessage(user), resolve)
 
-  leave: (userName) ->
+  leave: (userName, userParams = {}) ->
     new Promise (resolve) =>
-      user = new Hubot.User(userName, { room: @name })
+      userParams.room = @name
+      user = new Hubot.User(userName, userParams)
       @robot.receive(new Hubot.LeaveMessage(user), resolve)
 
 class Helper
