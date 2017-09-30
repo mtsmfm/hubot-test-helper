@@ -1,23 +1,22 @@
 {
   "name": "hubot-test-helper",
   "description": "Helper for testing hubot script",
-  "main": "./lib/index.js",
+  "main": "./src/index.js",
   "scripts": {
     "test": "mocha --compilers coffee:coffee-script/register test",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
-    "prepublish": "coffee --compile --output lib/ src/"
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "keywords": [
     "hubot"
   ],
   "dependencies": {
-    "hubot": ">=2.6.0 <10 || 0.0.0-development"
+    "hubot": ">=3.0.0 <10 || 0.0.0-development"
   },
   "devDependencies": {
     "chai": "latest",
     "co": "latest",
-    "coffee-script": "latest",
     "mocha": "latest",
+    "coffee-script": "latest",
     "semantic-release": "latest"
   },
   "author": "Fumiaki MATSUSHIMA",

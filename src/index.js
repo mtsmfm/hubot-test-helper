@@ -1,21 +1,16 @@
-/*
- * decaffeinate suggestions:
- * DS001: Remove Babel/TypeScript constructor workaround
- * DS101: Remove unnecessary use of Array.from
- * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
- * DS207: Consider shorter variations of null checks
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
+'use strict'
+
 const Fs    = require('fs');
 const Path  = require('path');
-const Hubot = require('hubot');
+const Hubot = require('hubot/es2015');
 
 process.setMaxListeners(0);
 
 class MockResponse extends Hubot.Response {
-  sendPrivate(...strings) {
-    return this.robot.adapter.sendPrivate(this.envelope, ...Array.from(strings));
+  sendPrivate(/* ...strings*/) {
+    const strings = [].slice.call(arguments, 0);
+
+    this.robot.adapter.sendPrivate.apply(this.robot.adapter, [this.envelope].concat(strings));
   }
 }
 
@@ -28,36 +23,31 @@ class MockRobot extends Hubot.Robot {
   }
 
   loadAdapter() {
-    return this.adapter = new Room(this);
+    this.adapter = new Room(this);
   }
 }
 
 class Room extends Hubot.Adapter {
-  constructor(robot) {
-    {
-      // Hack: trick Babel/TypeScript into allowing this before super.
-      if (false) { super(); }
-      let thisFn = (() => { this; }).toString();
-      let thisName = thisFn.slice(thisFn.indexOf('{') + 1, thisFn.indexOf(';')).trim();
-      eval(`${thisName} = this;`);
+  // XXX: https://github.com/hubotio/hubot/pull/1390
+  static messages(obj) {
+    if (obj instanceof MockRobot) {
+      return obj.adapter.messages;
+    } else {
+      return obj.messages;
     }
+  }
+
+  constructor(robot) {
+    super();
     this.robot = robot;
     this.messages = [];
 
     this.privateMessages = {};
 
     this.user = {
-      say: (userName, message, userParams) => {
-        return this.receive(userName, message, userParams);
-      },
-
-      enter: (userName, userParams) => {
-        return this.enter(userName, userParams);
-      },
-
-      leave: (userName, userParams) => {
-        return this.leave(userName, userParams);
-      }
+      say: (userName, message, userParams) => this.receive(userName, message, userParams),
+      enter: (userName, userParams) => this.enter(userName, userParams),
+      leave: (userName, userParams) => this.leave(userName, userParams)
     };
   }
 
@@ -74,31 +64,37 @@ class Room extends Hubot.Adapter {
       }
 
       this.messages.push([userName, textMessage.text]);
-      return this.robot.receive(textMessage, resolve);
+      this.robot.receive(textMessage, resolve);
     });
   }
 
   destroy() {
-    if (this.robot.server) { return this.robot.server.close(); }
+    if (this.robot.server) { this.robot.server.close(); }
   }
 
-  reply(envelope, ...strings) {
-    return Array.from(strings).map((str) => this.messages.push(['hubot', `@${envelope.user.name} ${str}`]));
+  reply(envelope/*, ...strings*/) {
+    const strings = [].slice.call(arguments, 1);
+
+    strings.forEach((str) => Room.messages(this).push(['hubot', `@${envelope.user.name} ${str}`]));
   }
 
-  send(envelope, ...strings) {
-    return Array.from(strings).map((str) => this.messages.push(['hubot', str]));
+  send(envelope/*, ...strings*/) {
+    const strings = [].slice.call(arguments, 1);
+
+    strings.forEach((str) => Room.messages(this).push(['hubot', str]));
   }
 
-  sendPrivate(envelope, ...strings) {
+  sendPrivate(envelope/*, ...strings*/) {
+    const strings = [].slice.call(arguments, 1);
+
     if (!(envelope.user.name in this.privateMessages)) {
       this.privateMessages[envelope.user.name] = [];
     }
-    return Array.from(strings).map((str) => this.privateMessages[envelope.user.name].push(['hubot', str]));
+    strings.forEach((str) => this.privateMessages[envelope.user.name].push(['hubot', str]));
   }
 
   robotEvent() {
-    return this.robot.emit.apply(this.robot, arguments);
+    this.robot.emit.apply(this.robot, arguments);
   }
 
   enter(userName, userParams) {
@@ -106,7 +102,7 @@ class Room extends Hubot.Adapter {
     return new Promise(resolve => {
       userParams.room = this.name;
       const user = new Hubot.User(userName, userParams);
-      return this.robot.receive(new Hubot.EnterMessage(user), resolve);
+      this.robot.receive(new Hubot.EnterMessage(user), resolve);
     });
   }
 
@@ -115,16 +111,12 @@ class Room extends Hubot.Adapter {
     return new Promise(resolve => {
       userParams.room = this.name;
       const user = new Hubot.User(userName, userParams);
-      return this.robot.receive(new Hubot.LeaveMessage(user), resolve);
+      this.robot.receive(new Hubot.LeaveMessage(user), resolve);
     });
   }
 }
 
 class Helper {
-  static initClass() {
-    this.Response = MockResponse;
-  }
-
   constructor(scriptsPaths) {
     if (!Array.isArray(scriptsPaths)) {
       scriptsPaths = [scriptsPaths];
@@ -140,10 +132,10 @@ class Helper {
       robot.Response = options.response;
     }
 
-    for (let script of Array.from(this.scriptsPaths)) {
+    for (let script of this.scriptsPaths) {
       script = Path.resolve(Path.dirname(module.parent.filename), script);
       if (Fs.statSync(script).isDirectory()) {
-        for (let file of Array.from(Fs.readdirSync(script).sort())) {
+        for (let file of Fs.readdirSync(script).sort()) {
           robot.loadFile(script, file);
         }
       } else {
@@ -157,6 +149,6 @@ class Helper {
     return robot.adapter;
   }
 }
-Helper.initClass();
+Helper.Response = MockResponse;
 
 module.exports = Helper;
