@@ -10,7 +10,7 @@ class NewMockResponse extends Helper.Response
 
 describe 'mock-response', ->
   beforeEach ->
-    @room = helper.createRoom(response: NewMockResponse)
+    @room = helper.createRoom(response: NewMockResponse, httpd: false)
 
   context 'user says "give me a random" number to hubot', ->
     beforeEach ->
