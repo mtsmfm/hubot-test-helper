@@ -5,7 +5,7 @@
   "scripts": {
     "test": "mocha --compilers coffee:coffee-script/register test",
     "autotest": "mocha --compilers coffee:coffee-script/register test -w",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release"
   },
   "keywords": [
     "hubot"

@@ -19,7 +19,20 @@ class MockRobot extends Hubot.Robot {
     if (httpd == null) { httpd = true; }
     super(null, null, httpd, 'hubot');
 
+    this.messagesTo = {};
+
     this.Response = MockResponse;
+  }
+
+  messageRoom(roomName, str) {
+    if (roomName == this.adapter.name) {
+      this.adapter.messages.push(['hubot', str]);
+    } else {
+      if (!(roomName in this.messagesTo)) {
+        this.messagesTo[roomName] = [];
+      }
+      this.messagesTo[roomName].push(['hubot', str]);
+    }
   }
 
   loadAdapter() {
