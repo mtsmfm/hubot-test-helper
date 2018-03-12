@@ -130,6 +130,53 @@ describe('http', function() {
 Note that `yield` and *generators* are part of [**ECMA6**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*), so it may not work on older node.js versions. It will wait for the delay to complete the `beforeEach` before proceeding to the test `it`.
 
 
+#### Testing messages sent to other rooms
+
+You can also test messages sent by your script to other rooms through Hubot's `robot.messageRoom(...)` method.
+
+Given the following script:
+```javascript
+module.exports = robot =>
+  robot.respond(/announce otherRoom: (.+)$/i, msg => {
+    robot.messageRoom('otherRoom', "@#{msg.envelope.user.name} said: #{msg.msg.match[1]}");
+  })
+```
+
+you could test the messages sent to other rooms like this:
+```javascript
+const Helper = require('../src/index');
+const helper = new Helper('../scripts/message-room.js');
+
+const expect = require('chai').expect;
+
+describe('message-room', function() {
+  beforeEach(function() {
+    this.room = helper.createRoom({name: 'room', httpd: false});
+  });
+
+  context('user asks hubot to announce something', function() {
+    beforeEach(function() {
+      return co(function*() {
+        yield this.room.user.say('alice', '@hubot announce otherRoom: I love hubot!');
+      }.bind(this));
+    });
+
+    it('should not post to this channel', function() {
+      expect(this.room.messages).to.eql([
+        ['alice', '@hubot announce otherRoom: I love hubot!']
+      ]);
+    });
+
+    it('should post to the other channel', function() {
+      expect(this.room.robot.messagesTo['otherRoom']).to.eql([
+        ['hubot', '@alice says: I love hubot!']
+      ]);
+    });
+  });
+});
+```
+
+
 #### Testing events
 
 You can also test events emitted by your script.  For example, Slack users
