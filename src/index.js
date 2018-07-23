@@ -6,6 +6,128 @@ const Hubot = require('hubot/es2015');
 
 process.setMaxListeners(0);
 
+class SlackClient {
+
+  constructor(robot) {
+    this.robot = robot;
+  }
+
+  fetchUserByName(name) {
+    return this.robot.brain.userForName(name);
+  }
+
+  fetchUserById(id) {
+    return this.robot.brain.userForId(id);
+  }
+}
+
+class SlackUser extends Hubot.User {
+
+  constructor(id, options) {
+    super(id, options);
+    this.info = {}
+  }
+}
+
+class SlackMessage extends Hubot.TextMessage {
+
+  constructor(user, message) {
+    super(user, message);
+    this.mentions = [];
+  }
+
+  static get MENTION_REGEX() {
+    return /([@#!])([^\s|]+)/g;
+  }
+
+  static get RAW_MENTION_REGEX() {
+    return /<([@#!])?([^>|]+)>/g;
+  }
+
+  static buildSlackMessage(client, user, message) {
+    const slackMessage = new SlackMessage(user, message);
+    slackMessage.replaceLinks(client, slackMessage.text)
+    return slackMessage;
+  }
+
+  replaceLinks(client, text) {
+    const regex = SlackMessage.MENTION_REGEX;
+    regex.lastIndex = 0;
+    let cursor = 0;
+    let result = null;
+
+    while (result = regex.exec(text)) {
+      const [m, type, link] = result;
+      switch (type) {
+        case '@':
+          const user = client.fetchUserByName(link);
+          if (user) {
+            this.mentions.push(new SlackMention(user.id, 'user', user));
+          }
+          break;
+        case '#':
+          console.log('# link is not supported yet');
+          break;
+        case '!':
+          console.log('! link is not supported yet');
+          break;
+      }
+      cursor = regex.lastIndex;
+      if (result[0].length == 0) {
+        regex.lastIndex++
+      }
+    }
+    return text;
+  }
+
+  static deferMessage(client, text) {
+    const regex = SlackMessage.RAW_MENTION_REGEX;
+    regex.lastIndex = 0;
+    let cursor = 0;
+    let result = null;
+    const parts = [];
+
+    while (result = regex.exec(text)) {
+      const [m, type, link] = result;
+      switch (type) {
+        case '@':
+          parts.push('@' + text.slice(cursor, result.index), SlackMessage.replaceUser(client, link));
+          break;
+        case '#':
+          console.log('# link is not supported yet');
+          break;
+        case '!':
+          console.log('! link is not supported yet');
+          break;
+      }
+      cursor = regex.lastIndex;
+      if (result[0].length == 0) {
+        regex.lastIndex++
+      }
+    }
+    parts.push(text.slice(cursor));
+    return parts.join('');
+  }
+
+  static replaceUser(client, id) {
+    const user = client.fetchUserById(id);
+    if (user) {
+      return `${user.name}`;
+    }
+    console.error(`Error getting user info ${id}: ${error.message}`);
+    return `<@${id}>`;
+  }
+}
+
+class SlackMention {
+
+  constructor(id, type, info) {
+    this.id = id;
+    this.type = type;
+    this.info = info;
+  }
+}
+
 class MockResponse extends Hubot.Response {
   sendPrivate(/* ...strings*/) {
     const strings = [].slice.call(arguments, 0);
@@ -53,8 +175,9 @@ class Room extends Hubot.Adapter {
   constructor(robot) {
     super();
     this.robot = robot;
-    this.messages = [];
+    this.client = new SlackClient(this.robot);
 
+    this.messages = [];
     this.privateMessages = {};
 
     this.user = {
@@ -72,8 +195,8 @@ class Room extends Hubot.Adapter {
         textMessage = message;
       } else {
         userParams.room = this.name;
-        const user = new Hubot.User(userName, userParams);
-        textMessage = new Hubot.TextMessage(user, message);
+        const user = new SlackUser(userName, userParams);
+        textMessage = SlackMessage.buildSlackMessage(this.client, user, message);
       }
 
       this.messages.push([userName, textMessage.text]);
@@ -88,13 +211,19 @@ class Room extends Hubot.Adapter {
   reply(envelope/*, ...strings*/) {
     const strings = [].slice.call(arguments, 1);
 
-    strings.forEach((str) => Room.messages(this).push(['hubot', `@${envelope.user.name} ${str}`]));
+    strings.forEach((str) => {
+      const msg = SlackMessage.deferMessage(this.client, str);
+      Room.messages(this).push(['hubot', `@${envelope.user.name} ${msg}`]) 
+    });
   }
 
   send(envelope/*, ...strings*/) {
     const strings = [].slice.call(arguments, 1);
 
-    strings.forEach((str) => Room.messages(this).push(['hubot', str]));
+    strings.forEach((str) => {
+      const msg = SlackMessage.deferMessage(this.client, str);
+      Room.messages(this).push(['hubot', msg])
+    });
   }
 
   sendPrivate(envelope/*, ...strings*/) {
@@ -103,7 +232,10 @@ class Room extends Hubot.Adapter {
     if (!(envelope.user.name in this.privateMessages)) {
       this.privateMessages[envelope.user.name] = [];
     }
-    strings.forEach((str) => this.privateMessages[envelope.user.name].push(['hubot', str]));
+    strings.forEach((str) => {
+      const msg = SlackMessage.deferMessage(this.client, str);
+      this.privateMessages[envelope.user.name].push(['hubot', msg])
+    });
   }
 
   robotEvent() {

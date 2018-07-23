@@ -2,6 +2,7 @@
   "name": "hubot-test-helper",
   "description": "Helper for testing hubot script",
   "main": "./src/index.js",
+  "version": "2.0",
   "scripts": {
     "test": "mocha --compilers coffee:coffee-script/register test",
     "autotest": "mocha --compilers coffee:coffee-script/register test -w",
