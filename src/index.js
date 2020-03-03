@@ -14,6 +14,12 @@ class MockResponse extends Hubot.Response {
   }
 }
 
+class MockAuth {
+  hasRole(user, roles) {
+    return true;
+  }
+}
+
 class MockRobot extends Hubot.Robot {
   constructor(httpd) {
     if (httpd == null) { httpd = true; }
@@ -22,6 +28,7 @@ class MockRobot extends Hubot.Robot {
     this.messagesTo = {};
 
     this.Response = MockResponse;
+    this.auth = MockAuth;
   }
 
   messageRoom(roomName, str) {
