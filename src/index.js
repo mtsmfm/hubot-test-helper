@@ -28,7 +28,7 @@ class MockRobot extends Hubot.Robot {
     this.messagesTo = {};
 
     this.Response = MockResponse;
-    this.auth = MockAuth;
+    this.auth = new MockAuth();
   }
 
   messageRoom(roomName, str) {
