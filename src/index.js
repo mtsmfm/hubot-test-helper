@@ -23,7 +23,7 @@ class MockAuth {
 class MockRobot extends Hubot.Robot {
   constructor(httpd) {
     if (httpd == null) { httpd = true; }
-    super(null, null, httpd, 'hubot');
+    super(null, null, httpd, 'truebot');
 
     this.messagesTo = {};
 
@@ -33,12 +33,12 @@ class MockRobot extends Hubot.Robot {
 
   messageRoom(roomName, str) {
     if (roomName == this.adapter.name) {
-      this.adapter.messages.push(['hubot', str]);
+      this.adapter.messages.push(['truebot', str]);
     } else {
       if (!(roomName in this.messagesTo)) {
         this.messagesTo[roomName] = [];
       }
-      this.messagesTo[roomName].push(['hubot', str]);
+      this.messagesTo[roomName].push(['truebot', str]);
     }
   }
 
@@ -95,13 +95,13 @@ class Room extends Hubot.Adapter {
   reply(envelope/*, ...strings*/) {
     const strings = [].slice.call(arguments, 1);
 
-    strings.forEach((str) => Room.messages(this).push(['hubot', `@${envelope.user.name} ${str}`]));
+    strings.forEach((str) => Room.messages(this).push(['truebot', `@${envelope.user.name} ${str}`]));
   }
 
   send(envelope/*, ...strings*/) {
     const strings = [].slice.call(arguments, 1);
 
-    strings.forEach((str) => Room.messages(this).push(['hubot', str]));
+    strings.forEach((str) => Room.messages(this).push(['truebot', str]));
   }
 
   sendPrivate(envelope/*, ...strings*/) {
@@ -110,7 +110,7 @@ class Room extends Hubot.Adapter {
     if (!(envelope.user.name in this.privateMessages)) {
       this.privateMessages[envelope.user.name] = [];
     }
-    strings.forEach((str) => this.privateMessages[envelope.user.name].push(['hubot', str]));
+    strings.forEach((str) => this.privateMessages[envelope.user.name].push(['truebot', str]));
   }
 
   robotEvent() {
