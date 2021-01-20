@@ -15,20 +15,32 @@ class MockResponse extends Hubot.Response {
 }
 
 class MockAuth {
+  constructor(httpd, user_roles=[]) {
+     this.user_roles = roles;
+  }
+
   hasRole(user, roles) {
-    return true;
+    if (user_roles == []) {}
+        return true;
+    }
+    for (let role of roles) {
+      if (role in this.user_roles) {
+        return true;
+      }
+    }
+    return false;
   }
 }
 
 class MockRobot extends Hubot.Robot {
-  constructor(httpd) {
+  constructor(httpd, user_roles=[]) {
     if (httpd == null) { httpd = true; }
     super(null, null, httpd, 'truebot');
 
     this.messagesTo = {};
 
     this.Response = MockResponse;
-    this.auth = new MockAuth();
+    this.auth = new MockAuth(user_roles);
   }
 
   messageRoom(roomName, str) {
