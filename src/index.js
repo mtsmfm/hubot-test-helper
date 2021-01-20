@@ -15,7 +15,7 @@ class MockResponse extends Hubot.Response {
 }
 
 class MockAuth {
-  constructor(httpd, user_roles=[]) {
+  constructor(user_roles=[]) {
      this.user_roles = user_roles;
   }
 
