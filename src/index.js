@@ -20,7 +20,7 @@ class MockAuth {
   }
 
   hasRole(user, roles) {
-    if (typeof roles is 'string') {
+    if (typeof roles == 'string') {
         roles = [roles];
     }
     for (let role of roles) {
