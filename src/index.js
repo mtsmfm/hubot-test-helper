@@ -24,7 +24,7 @@ class MockAuth {
         roles = [roles];
     }
     for (let role of roles) {
-      if (this.user_roles.indexOf(role) != -1)
+      if (this.user_roles.indexOf(role) != -1) {
         return true;
       }
     }
