@@ -152,6 +152,10 @@ class Helper {
       robot.Response = options.response;
     }
 
+    if ('auth' in options) {
+      robot.auth = options.auth;
+    }
+
     for (let script of this.scriptsPaths) {
       script = Path.resolve(Path.dirname(module.parent.filename), script);
       if (Fs.statSync(script).isDirectory()) {
