@@ -26,9 +26,11 @@ class MockAuth {
     for (let role of roles) {
       console.log(`Checking if ${role} in ${this.user_roles}`);
       if (role in this.user_roles) {
+        console.log("Returning true");
         return true;
       }
     }
+    console.log("Returning false");
     return false;
   }
 
