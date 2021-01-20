@@ -20,15 +20,16 @@ class MockAuth {
   }
 
   hasRole(user, roles) {
-    if (user_roles == []) {}
-        return true;
-    }
     for (let role of roles) {
       if (role in this.user_roles) {
         return true;
       }
     }
     return false;
+  }
+
+  addRole(role) {
+    this.user_roles.push(role);
   }
 }
 
@@ -162,10 +163,6 @@ class Helper {
 
     if ('response' in options) {
       robot.Response = options.response;
-    }
-
-    if ('auth' in options) {
-      robot.auth = options.auth;
     }
 
     for (let script of this.scriptsPaths) {
