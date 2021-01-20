@@ -16,7 +16,7 @@ class MockResponse extends Hubot.Response {
 
 class MockAuth {
   constructor(httpd, user_roles=[]) {
-     this.user_roles = user_roles;
+     this.user_roles = roles;
   }
 
   hasRole(user, roles) {
@@ -157,9 +157,9 @@ class Helper {
     this.scriptsPaths = scriptsPaths;
   }
 
-  createRoom(options) {
+  createRoom(options, user_roles=[]) {
     if (options == null) { options = {}; }
-    const robot = new MockRobot(options.httpd);
+    const robot = new MockRobot(options.httpd, user_roles=user_roles);
 
     if ('response' in options) {
       robot.Response = options.response;
