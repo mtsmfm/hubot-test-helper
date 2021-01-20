@@ -1,6 +1,7 @@
 {
   "name": "hubot-test-helper",
   "description": "Helper for testing hubot script",
+  "version": "1.0.0",
   "main": "./src/index.js",
   "scripts": {
     "test": "mocha --compilers coffee:coffee-script/register test",
