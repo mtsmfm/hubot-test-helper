@@ -17,7 +17,7 @@ class MockResponse extends Hubot.Response {
 class MockRobot extends Hubot.Robot {
   constructor(httpd) {
     if (httpd == null) { httpd = true; }
-    super(null, null, httpd, 'hubot');
+    super(null, httpd, 'hubot', 'hubot');
 
     this.messagesTo = {};
 
@@ -140,6 +140,7 @@ class Helper {
   createRoom(options) {
     if (options == null) { options = {}; }
     const robot = new MockRobot(options.httpd);
+    robot.loadAdapter();
 
     if ('response' in options) {
       robot.Response = options.response;
