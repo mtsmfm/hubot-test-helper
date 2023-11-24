@@ -3,27 +3,30 @@
   "description": "Helper for testing hubot script",
   "main": "./src/index.js",
   "scripts": {
-    "test": "mocha --compilers coffee:coffee-script/register test",
-    "autotest": "mocha --compilers coffee:coffee-script/register test -w",
+    "test": "mocha --require coffeescript/register --extension \"js, coffee\" test",
+    "autotest": "mocha ---require coffeescript/register --extension \"js, coffee\" test -w",
     "semantic-release": "semantic-release"
   },
   "keywords": [
     "hubot"
   ],
   "dependencies": {
-    "hubot": ">=3.0.0 <10 || 0.0.0-development"
+    "hubot": "^10.0.5"
   },
   "devDependencies": {
-    "chai": "latest",
-    "co": "latest",
-    "mocha": "latest",
-    "coffee-script": "latest",
-    "semantic-release": "latest"
+    "chai": "^4.3.10",
+    "co": "^4.6.0",
+    "mocha": "^10.2.0",
+    "coffeescript": "^2.7.0",
+    "semantic-release": "^22.0.8"
   },
   "author": "Fumiaki MATSUSHIMA",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/mtsmfm/hubot-test-helper"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
