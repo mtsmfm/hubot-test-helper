@@ -1,20 +1,19 @@
 Helper = require('../src/index')
-helper = new Helper('./scripts/hello-world.coffee')
 
-co     = require('co')
-expect = require('chai').expect
+{ expect } = require('chai')
+
+helper = new Helper('./scripts/hello-world.coffee');
 
 describe 'hello-world', ->
   beforeEach ->
-    @room = helper.createRoom(httpd: false)
+    @room = await helper.createRoom()
   afterEach ->
     @room.destroy()
 
   context 'user says hi to hubot', ->
     beforeEach ->
-      co =>
-        yield @room.user.say 'alice', '@hubot hi'
-        yield @room.user.say 'bob',   '@hubot hi'
+      await @room.user.say 'alice', '@hubot hi'
+      await @room.user.say 'bob',   '@hubot hi'
 
     it 'should reply to user', ->
       expect(@room.messages).to.eql [

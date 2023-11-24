@@ -1,27 +1,29 @@
+'use strict';
+
 const Helper = require('../src/index');
+const Hubot = require('hubot/es2015');
+
+const { expect } = require('chai');
+
 const helper = new Helper('./scripts/custom-text-message.js');
-const Hubot = require('hubot');
 
-const co     = require('co');
-const expect = require('chai').expect;
+describe('custom-text-message', () => {
+  let room;
 
-describe('custom-text-message', function() {
-  beforeEach(function() {
-    this.room = helper.createRoom({httpd: false});
+  beforeEach(async () => {
+    room = await helper.createRoom();
   });
 
-  context('Passing a custom text message object', function() {
-    beforeEach(function() {
-      return co(function*() {
-        const textMessage = new Hubot.TextMessage({}, '');
-        textMessage.isCustom = true;
-        textMessage.custom = 'custom';
-        yield this.room.user.say('user', textMessage);
-      }.bind(this));
+  context('Passing a custom text message object', () => {
+    beforeEach(async () => {
+      const textMessage = new Hubot.TextMessage({}, '');
+      textMessage.isCustom = true;
+      textMessage.custom = 'custom';
+      await room.user.say('user', textMessage);
     });
 
-    it('sends back', function() {
-      expect(this.room.messages[1][1]).to.be.equal('custom');
+    it('sends back', () => {
+      expect(room.messages[1][1]).to.be.equal('custom');
     });
   });
 });
