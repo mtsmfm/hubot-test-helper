@@ -1,31 +1,31 @@
-'use strict'
+'use strict';
 
 const Helper = require('../src/index');
+
+const { expect } = require('chai');
+
 const helper = new Helper('./scripts/private-message.js');
 
-const co     = require('co');
-const expect = require('chai').expect;
+describe('private-message', () => {
+  let room;
 
-describe('private-message', function() {
-  beforeEach(function() {
-    this.room = helper.createRoom({httpd: false});
+  beforeEach(async () => {
+    room = await helper.createRoom();
   });
 
-  context('user asks hubot for a secret', function() {
-    beforeEach(function() {
-      return co(function*() {
-        yield this.room.user.say('alice', '@hubot tell me a secret');
-      }.bind(this));
+  context('user asks hubot for a secret', () => {
+    beforeEach(async () => {
+      await room.user.say('alice', '@hubot tell me a secret');
     });
 
-    it('should not post to the public channel', function() {
-      expect(this.room.messages).to.eql([
+    it('should not post to the public channel', () => {
+      expect(room.messages).to.eql([
         ['alice', '@hubot tell me a secret']
       ]);
     });
 
-    it('should private message user', function() {
-      expect(this.room.privateMessages).to.eql({
+    it('should private message user', () => {
+      expect(room.privateMessages).to.eql({
         'alice': [
           ['hubot', 'whisper whisper whisper']
         ]

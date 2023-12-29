@@ -1,32 +1,38 @@
-'use strict'
+'use strict';
 
 const Helper = require('../src/index');
-const helper = new Helper('./scripts');
 const http = require('http');
 
-const expect = require('chai').expect;
+const { expect } = require('chai');
 
-process.env.EXPRESS_PORT = 8080;
+const helper = new Helper('./scripts/httpd-world.js');
 
-describe('httpd-world', function() {
-  beforeEach(function() {
-    this.room = helper.createRoom();
+process.env.EXPRESS_PORT = '8080';
+
+describe('httpd-world', () => {
+  let room;
+  let response;
+
+  beforeEach(async () => {
+    room = await helper.createRoom({httpd: true});
   });
 
-  afterEach(function() {
-    this.room.destroy();
+  afterEach(() => {
+    room.destroy();
   });
 
-  context('GET /hello/world', function() {
-    beforeEach(function(done) {
-      http.get('http://localhost:8080/hello/world', response => {
-        this.response = response;
-        done();
-      }).on('error', done);
+  context('GET /hello/world', () => {
+    beforeEach(async() => {
+      await new Promise((resolve) => {
+        http.get('http://localhost:8080/hello/world', res => {
+          response = res;
+          resolve();
+        }).on('error', resolve);
+      });
     });
 
     it('responds with status 200', function() {
-      expect(this.response.statusCode).to.equal(200);
+      expect(response.statusCode).to.equal(200);
     });
   });
 });
