@@ -24,12 +24,12 @@ class MockRobot extends Hubot.Robot {
 
   async messageRoom(room, ...strings) {
     if (room === this.adapter.name) {
-      strings.forEach((str) => this.adapter.messages.push(['hubot', str]));
+      strings.forEach((str) => this.adapter.messages.push([this.name, str]));
     } else {
       if (!(room in this.messagesTo)) {
         this.messagesTo[room] = [];
       }
-      strings.forEach((str) => this.messagesTo[room].push(['hubot', str]));
+      strings.forEach((str) => this.messagesTo[room].push([this.name, str]));
     }
 
     return Promise.resolve();
@@ -83,18 +83,18 @@ class Room extends Hubot.Adapter {
   }
 
   reply(envelope, ...strings) {
-    strings.forEach((str) => Room.messages(this).push(['hubot', `@${envelope.user.name} ${str}`]));
+    strings.forEach((str) => Room.messages(this).push([this.robot.name, `@${envelope.user.name} ${str}`]));
   }
 
   send(envelope, ...strings) {
-    strings.forEach((str) => Room.messages(this).push(['hubot', str]));
+    strings.forEach((str) => Room.messages(this).push([this.robot.name, str]));
   }
 
   sendPrivate(envelope, ...strings) {
     if (!(envelope.user.name in this.privateMessages)) {
       this.privateMessages[envelope.user.name] = [];
     }
-    strings.forEach((str) => this.privateMessages[envelope.user.name].push(['hubot', str]));
+    strings.forEach((str) => this.privateMessages[envelope.user.name].push([this.robot.name, str]));
   }
 
   robotEvent(event, ...args) {
